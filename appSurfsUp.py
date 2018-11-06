@@ -65,11 +65,12 @@ def precipitation():
             precip_dict["date"] = precip[0]
             precip_dict["prcp"] = precip[1]
             all_precip.append(precip_dict)
-
+        session.commit()
         return jsonify(all_precip)
 
     except Exception:
             print("Error")
+            session.rollback()
 
     return jsonify(all_precip)
 
@@ -89,9 +90,10 @@ def stations():
             station_dict["station"] = stat[1]
             station_dict["name"] = stat[2]
             all_stations.append(station_dict)
-
+        session.commit()
     except Exception:
         print("Error")
+        session.rollback()
 
     return jsonify(all_stations)
 
@@ -115,9 +117,10 @@ def tobs():
             tobs_dict["date"] = tobs_in[0]
             tobs_dict["tobs"] = tobs_in[1]
             all_tobs.append(tobs_dict)
-
+        session.commit()
     except Exception:
         print("Error")
+        session.rollback()
 
     return jsonify(all_tobs)
 
@@ -139,10 +142,11 @@ def start_date(start=None):
             smry_dict["max"] = smry[1]
             smry_dict["avg"] = smry[2]
         summary.append(smry_dict)
-
+        session.commit()
     except Exception:
         print("Error")
-    
+        session.rollback()
+   
     return jsonify(summary)
 
 @app.route("/api/v1.0/<start>/<end>")
@@ -166,11 +170,13 @@ def start_end(start=None, end=None):
             smry2_dict["max"] = smry2[1]
             smry2_dict["avg"] = smry2[2]
         summary2.append(smry2_dict)
-
+        session.commit()
     except Exception:
         print("Error")
-        
+        session.rollback()
+
     return jsonify(summary2)
 
+session.close()
 if __name__ == '__main__':
     app.run(debug=True)
